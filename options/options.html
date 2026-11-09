@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper Fetcher - Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">🔓</span>
+        <div>
+          <h1>Paper Fetcher Settings</h1>
+          <p class="subtitle">Direct PDF Downloader & Sci-Hub Mirror Controls</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- Sci-Hub Settings Section -->
+      <section class="card">
+        <h2>⚡ Sci-Hub Mirrors (via sci-hub.pub)</h2>
+        <p class="description">Live mirrors are dynamically verified so downloads and paper views never hit blocked domains.</p>
+
+        <div class="mirror-actions">
+          <button id="btn-check-all-mirrors" class="btn btn-secondary">
+            ⚡ Test & Refresh All Mirrors
+          </button>
+          <a href="https://www.sci-hub.pub/" target="_blank" rel="noreferrer" class="link-external">
+            Visit sci-hub.pub ↗
+          </a>
+        </div>
+
+        <div id="mirror-status-list" class="mirror-status-list"></div>
+      </section>
+
+      <!-- Preferences -->
+      <section class="card">
+        <h2>⚙️ Preferences</h2>
+
+        <div class="checkbox-group">
+          <label class="switch-label">
+            <input type="checkbox" id="pref-auto-badge" checked>
+            <span class="checkbox-title">Show extension badge on paper detection</span>
+          </label>
+          <p class="hint">Displays 'PDF' or 'LOCK' badge on the toolbar icon when on academic papers.</p>
+        </div>
+      </section>
+
+      <!-- Action buttons -->
+      <div class="footer-actions">
+        <button id="btn-save" class="btn btn-primary">Save Settings</button>
+        <span id="save-status" class="save-status"></span>
+      </div>
+    </main>
+  </div>
+
+  <script src="options.js" type="module"></script>
+</body>
+</html>

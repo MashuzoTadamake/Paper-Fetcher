@@ -1,0 +1,12 @@
+*.pdf
+*.crdownload
+*.part
+*.tmp
+doc/
+docs/
+.DS_Store
+Thumbs.db
+
+*.log
+.scratch/
+node_modules/

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper Fetcher</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <span class="brand-icon">🔓</span>
+        <div class="brand-text">
+          <h1>Paper Fetcher</h1>
+          <span class="subtitle" id="mirror-subtitle">Direct PDF Downloader</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-settings" class="icon-button" title="Settings" aria-label="Settings">
+          ⚙️
+        </button>
+      </div>
+    </header>
+
+    <!-- Status Banner -->
+    <div id="status-chip" class="status-chip chip-loading">
+      <span class="status-dot"></span>
+      <span id="status-text">Scanning page...</span>
+    </div>
+
+    <!-- Main Content View (Paper Detection & Actions) -->
+    <main id="main-content">
+      <!-- Loading State -->
+      <div id="state-loading" class="state-view">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-meta"></div>
+        <div class="skeleton skeleton-meta short"></div>
+      </div>
+
+      <!-- Paper Found State -->
+      <div id="state-found" class="state-view hidden">
+        <div id="paywall-banner" class="paywall-banner hidden">
+          <span class="alert-icon">⚠️</span>
+          <span>Paywalled Paper — Unlock & Download Free</span>
+        </div>
+
+        <div class="paper-card">
+          <h2 id="paper-title" class="paper-title" title="Click to copy title"></h2>
+          
+          <div class="meta-row">
+            <span class="meta-label">Authors:</span>
+            <span id="paper-authors" class="meta-value"></span>
+          </div>
+
+          <div class="meta-row" id="row-journal">
+            <span class="meta-label">Journal:</span>
+            <span id="paper-journal" class="meta-value"></span>
+          </div>
+
+          <div class="tags-row">
+            <span id="paper-year" class="tag hidden"></span>
+            <span id="paper-volume" class="tag hidden"></span>
+            <!-- Sci-Hub Live Availability Tag -->
+            <span id="scihub-status-tag" class="tag tag-checking">⏳ Checking Sci-Hub...</span>
+          </div>
+
+          <!-- DOI Box -->
+          <div class="doi-box">
+            <div class="doi-content">
+              <span class="doi-prefix">DOI:</span>
+              <span id="paper-doi" class="doi-value"></span>
+            </div>
+            <button id="btn-copy-doi" class="btn-copy" title="Copy DOI">
+              📋
+            </button>
+          </div>
+        </div>
+
+        <!-- Primary Action Buttons -->
+        <div class="action-grid">
+          <button id="btn-download-pdf" class="btn btn-download" disabled title="Download paper PDF directly to your PC">
+            <span class="btn-icon">⏳</span>
+            <span>Checking Sci-Hub...</span>
+          </button>
+          <button id="btn-scihub" class="btn btn-primary" title="Open paper in Sci-Hub browser tab">
+            <span class="btn-icon">⚡</span>
+            <span>Open on Sci-Hub</span>
+          </button>
+        </div>
+
+        <!-- Sci-Hub Availability Notice Banner -->
+        <div id="scihub-notice-banner" class="notice-banner hidden">
+          <div class="notice-header">
+            <span class="notice-icon">❌</span>
+            <span id="scihub-notice-text">still not available on sci-hub :3</span>
+          </div>
+          <div class="notice-subtext" id="scihub-notice-subtext">
+            This paper is not in the Sci-Hub archive. Direct download is disabled to prevent saving HTML error pages.
+          </div>
+        </div>
+
+        <div class="quick-links">
+          <a id="link-direct-pdf" href="#" class="quick-link hidden" target="_blank" rel="noreferrer">
+            📄 Direct Publisher PDF
+          </a>
+        </div>
+      </div>
+
+      <!-- No Paper Found State -->
+      <div id="state-not-found" class="state-view hidden">
+        <div class="empty-state">
+          <div class="empty-icon">🔍</div>
+          <h3>No Paper Detected</h3>
+          <p>No academic DOI or paper metadata was found on this tab.</p>
+          
+          <!-- Manual DOI Fallback -->
+          <div class="manual-input-box">
+            <label for="manual-doi-input">Enter DOI or ScienceDirect URL:</label>
+            <div class="input-group">
+              <input type="text" id="manual-doi-input" placeholder="e.g. 10.1016/j.ipm.2022.103061">
+              <button id="btn-manual-go" class="btn btn-small btn-primary">Go</button>
+            </div>
+          </div>
+
+          <button id="btn-rescan" class="btn btn-outline">
+            🔄 Rescan Page
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- In-Popup Settings View -->
+    <div id="view-settings" class="settings-view hidden">
+      <div class="settings-topbar">
+        <button id="btn-back-from-settings" class="btn-back">
+          ← Back
+        </button>
+        <span class="settings-heading">Settings</span>
+      </div>
+
+      <div class="settings-card">
+        <div class="settings-group-title">⚡ Live Sci-Hub Mirrors (via sci-hub.pub)</div>
+        <div class="mirror-tool-row">
+          <span class="hint">Tested automatically to use unblocked domain:</span>
+          <button id="btn-popup-check-mirrors" class="btn btn-small btn-outline">
+            🔄 Ping All
+          </button>
+        </div>
+        <div id="popup-mirrors-list" class="popup-mirrors-list"></div>
+      </div>
+
+      <div class="settings-card">
+        <div class="settings-group-title">⚙️ Preferences</div>
+        <label class="setting-checkbox">
+          <input type="checkbox" id="popup-pref-badge" checked>
+          <span>Show 'PDF'/'LOCK' badge on browser icon</span>
+        </label>
+      </div>
+
+      <button id="btn-save-in-popup" class="btn btn-primary" style="width: 100%; margin-top: 4px;">
+        Save & Return
+      </button>
+    </div>
+
+    <!-- Feedback Toast -->
+    <div id="toast" class="toast hidden">
+      <span id="toast-message"></span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" id="main-footer">
+      <span class="footer-note">⚡ Fast direct downloads via Sci-Hub</span>
+      <a href="https://www.sci-hub.pub/" target="_blank" rel="noreferrer" class="link-scihub-pub">sci-hub.pub ↗</a>
+    </footer>
+  </div>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>
