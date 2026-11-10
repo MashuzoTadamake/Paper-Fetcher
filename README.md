@@ -14,7 +14,7 @@
   Author et al - (Year) - Paper Title.pdf
   ```
 * **Zero-HTML Safety Guard:** Many extensions accidentally trigger downloads on error pages or paywalls, leaving you with useless `.html` files. Paper Fetcher inspects the file's binary magic bytes (`%PDF-`) before initiating any download. If a paper isn't available, it cleanly tells you instead of downloading garbage.
-* **Deep Metadata Extraction:** Automatically detects DOIs, ScienceDirect PIIs, titles, and authors across ScienceDirect, IEEE Xplore, Nature, Springer, Wiley, ACM, and more.
+* **Deep Metadata Extraction:** Automatically detects DOIs, ScienceDirect PIIs, titles, and authors across many sites.
 * **100% Private & Client-Side:** No external servers, no tracking, no accounts, and no background bloat. Everything runs locally in your browser.
 
 ---
